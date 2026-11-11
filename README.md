@@ -4,10 +4,27 @@ Two notebooks about estimating expectations that involve **two layers of randomn
 the two is almost identical: an outer loop over $`z_1`$ and an inner loop over $`z_2 \mid z_1`$. The
 statistics are completely different, and the difference comes down to where a nonlinearity sits.
 
-| Notebook | Target | Key facts |
-|---|---|---|
-| [**Part 1 — Hierarchical (two-stage) sampling**](01_hierarchical_sampling.ipynb) | $`\mathbb{E}_{z_1}\big[\mathbb{E}_{z_2\mid z_1}[h(z_1,z_2)]\big]`$ | Tower property, so the estimator is unbiased for every $`M`$. $`\operatorname{Var} = \sigma_B^2/N + \sigma_W^2/(NM)`$. Optimal $`M = \sqrt{(c_1/c_2)(\sigma_W^2/\sigma_B^2)}`$. Rao–Blackwellisation as $`M\to\infty`$. |
-| [**Part 2 — Nested Monte Carlo**](02_nested_monte_carlo.ipynb) | $`\mathbb{E}_{z_1}\big[f\big(\mathbb{E}_{z_2\mid z_1}[h(z_1,z_2)]\big)\big]`$, $`f`$ nonlinear | Bias $`\approx -C/M`$, so the estimator is inconsistent at fixed $`M`$. MSE $`= b(M)^2 + v_M/N`$. Optimal $`M \propto T^{1/3}`$, and the best MSE is $`O(T^{-2/3})`$ instead of $`O(T^{-1})`$. Richardson debiasing. Links to IWAE and experimental design. |
+### [Part 1 — Hierarchical (two-stage) sampling](01_hierarchical_sampling.ipynb)
+
+```math
+\mu = \mathbb{E}_{z_1}\Big[\mathbb{E}_{z_2\mid z_1}\big[h(z_1,z_2)\big]\Big]
+```
+
+- By the tower property, the two-stage estimator is unbiased for every $`M`$.
+- Its variance is $`\mathrm{Var}(\hat\mu_{N,M}) = \sigma_B^2/N + \sigma_W^2/(NM)`$.
+- The optimal number of inner samples is $`M^\star = \sqrt{(c_1/c_2)(\sigma_W^2/\sigma_B^2)}`$.
+- In the limit $`M\to\infty`$ the estimator becomes Rao–Blackwellisation.
+
+### [Part 2 — Nested Monte Carlo](02_nested_monte_carlo.ipynb)
+
+```math
+J = \mathbb{E}_{z_1}\Big[f\Big(\mathbb{E}_{z_2\mid z_1}\big[h(z_1,z_2)\big]\Big)\Big], \qquad f \text{ nonlinear}
+```
+
+- The bias is $`b(M) \approx -C/M`$, so the estimator is inconsistent at fixed $`M`$.
+- The error splits exactly as $`\mathrm{MSE} = b(M)^2 + v_M/N`$.
+- The optimal $`M`$ grows like $`T^{1/3}`$, and the best MSE is $`O(T^{-2/3})`$ instead of $`O(T^{-1})`$.
+- The notebook also covers Richardson debiasing and the links to IWAE and Bayesian experimental design.
 
 Start with Part 1. Part 2 reuses the same model and contrasts with it throughout.
 
