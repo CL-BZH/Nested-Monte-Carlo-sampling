@@ -97,7 +97,7 @@ print(f"closed form            = {-0.5 * np.log(2 * np.pi) - 0.5 * (5 + 4 * mode
 # **Joint (direct) sampling.** Factor $\Sigma = LL^\top$ (Cholesky) and set $z = \mu + L\varepsilon$ with
 # $\varepsilon \sim \mathcal{N}(0, I_2)$.
 #
-# **Ancestral (hierarchical) sampling.** Use the factorisation $q(z_1,z_2) = q(z_1)\,q(z_2\mid z_1)$, where
+# **Ancestral sampling.** Use the factorisation $q(z_1,z_2) = q(z_1)\,q(z_2\mid z_1)$, where
 # for a bivariate normal
 #
 # $$
@@ -385,6 +385,23 @@ print(f"exact mu = {mu_exact:.4f}")
 # * With equal costs, $M = 1$ (plain joint sampling) is optimal. With an expensive outer draw, use
 #   $M^\star = \sqrt{(c_1/c_2)(\sigma_W^2/\sigma_B^2)}$.
 # * $M\to\infty$ with an analytic inner expectation is Rao–Blackwellisation, which always reduces variance.
+#
+# ### One axis, three names
+#
+# All the estimators of this notebook are the same estimator at different values of $M$, the number of inner
+# samples per outer sample:
+#
+# | $M$ | Name in the literature | What it is |
+# |---|---|---|
+# | $1$ | **Ancestral sampling** | Draw each variable given its parents, in order. Each draw is an exact, independent sample from the joint, so averaging is plain Monte Carlo. |
+# | $1 < M < \infty$ | **Two-stage** (multistage) **sampling** | Reuse each outer sample for $M$ inner ones. Same mean, but correlated samples (sections 4–6). |
+# | $\infty$, analytically | **Rao–Blackwellisation** (conditional Monte Carlo) | Replace the inner average by its exact value (section 7). |
+#
+# A note on terminology. The identity that makes all of them unbiased is the **law of iterated expectations**
+# (the tower property). "Hierarchical Monte Carlo", used in this repository as the opposite of *nested* Monte
+# Carlo, is not a standard term. In machine learning, the $M=1$ case is called ancestral sampling, and in survey
+# statistics the $M>1$ case is called two-stage sampling. Do not confuse either with *hierarchical models*
+# (Bayesian models with priors on priors) or with *multilevel Monte Carlo* (Giles), which are different things.
 #
 # Everything above relied on one property: **the inner average is fed linearly into the outer average.**
 # In [Part 2](02_nested_monte_carlo.ipynb) we put a $\log$ between them, and that changes everything.
